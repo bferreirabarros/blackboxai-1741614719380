@@ -1,0 +1,140 @@
+/* Custom styles for the Calendly Clone */
+body {
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom hover effects */
+.hover-scale {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.hover-scale:hover {
+    transform: scale(1.02);
+}
+
+/* Custom shadows */
+.custom-shadow {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.dark .custom-shadow {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Custom form styles */
+.form-input:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: #3B82F6;
+}
+
+.dark .form-input:focus {
+    ring-color: #60A5FA;
+}
+
+/* Custom button styles */
+.custom-button {
+    transition: all 0.3s ease;
+}
+
+.custom-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dark .custom-button:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Theme toggle button animation */
+#theme-toggle {
+    transition: transform 0.3s ease;
+}
+
+#theme-toggle:hover {
+    transform: rotate(15deg);
+}
+
+/* Dark mode specific styles */
+.dark input::placeholder {
+    color: #9CA3AF;
+}
+
+.dark select option {
+    background-color: #2d2d2d;
+    color: #D1D5DB;
+}
+
+/* Notification animations */
+.notification {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.notification.fade-out {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+/* Calendar event card transitions */
+.scheduled-events > div {
+    transition: all 0.3s ease;
+}
+
+/* Custom checkbox styles */
+input[type="checkbox"] {
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.dark input[type="checkbox"] {
+    border-color: #4B5563;
+    background-color: #374151;
+}
+
+/* Calendar source dropdown custom styles */
+#calendar-source {
+    transition: all 0.3s ease;
+}
+
+/* Footer link hover effects */
+footer a {
+    transition: color 0.3s ease;
+}
+
+/* Badge transitions */
+span.ml-2 {
+    transition: background-color 0.3s ease;
+}
+
+/* Delete button hover effect */
+button[title="Delete event"] {
+    transition: color 0.3s ease;
+}
+
+/* Empty state icon animation */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.scheduled-events .fas.fa-calendar-plus {
+    animation: pulse 2s infinite;
+}
