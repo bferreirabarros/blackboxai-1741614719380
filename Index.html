@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Scheduling App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            100: '#1a1a1a',
+                            200: '#2d2d2d',
+                            300: '#404040',
+                            400: '#525252',
+                            500: '#737373',
+                            600: '#a3a3a3',
+                            700: '#d4d4d4',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+    <!-- Microsoft Graph SDK -->
+    <script src="https://alcdn.msauth.net/browser/2.30.0/js/msal-browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/microsoft-graph-client/lib/graph-js-sdk.js"></script>
+    <!-- Google API Client Library -->
+    <script src="https://apis.google.com/js/api.js"></script>
+</head>
+<body class="bg-gray-50 dark:bg-dark-100 min-h-screen transition-colors duration-200">
+    <!-- Navigation -->
+    <nav class="bg-white dark:bg-dark-200 shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-calendar-alt text-blue-600 text-2xl"></i>
+                    <h1 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Schedule Master</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100">
+                        <i class="fas fa-sun text-xl dark:hidden"></i>
+                        <i class="fas fa-moon text-xl hidden dark:inline"></i>
+                    </button>
+                    <button id="m365-connect" class="flex items-center px-4 py-2 bg-[#0078D4] text-white rounded-lg hover:bg-[#106EBE] transition">
+                        <i class="fab fa-microsoft mr-2"></i>
+                        <span id="m365-status">Connect M365</span>
+                    </button>
+                    <button id="google-connect" class="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                        <i class="fab fa-google mr-2"></i>
+                        <span id="google-status">Connect Google</span>
+                    </button>
+                    <button class="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition custom-button">
+                        <i class="fas fa-plus mr-2"></i>New Event
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Schedule Form Section -->
+            <section class="bg-white dark:bg-dark-200 rounded-xl shadow-lg p-6 hover-scale custom-shadow">
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6">Schedule an Event</h2>
+                <form id="schedule-form" class="space-y-4">
+                    <div>
+                        <label for="event-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Event Name</label>
+                        <input type="text" id="event-name" 
+                               class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-dark-400 dark:bg-dark-300 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input"
+                               placeholder="Enter event name" required>
+                    </div>
+                    <div>
+                        <label for="event-date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Event Date</label>
+                        <input type="date" id="event-date" 
+                               class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-dark-400 dark:bg-dark-300 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input"
+                               required>
+                    </div>
+                    <div>
+                        <label for="event-time" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Event Time</label>
+                        <select id="event-time" 
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-dark-400 dark:bg-dark-300 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input">
+                            <option value="09:00">9:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="12:00">12:00 PM</option>
+                            <option value="13:00">1:00 PM</option>
+                            <option value="14:00">2:00 PM</option>
+                            <option value="15:00">3:00 PM</option>
+                            <option value="16:00">4:00 PM</option>
+                            <option value="17:00">5:00 PM</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="event-duration" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Duration</label>
+                        <select id="event-duration" 
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-dark-400 dark:bg-dark-300 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input">
+                            <option value="30">30 minutes</option>
+                            <option value="60">1 hour</option>
+                            <option value="90">1.5 hours</option>
+                            <option value="120">2 hours</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                        <input type="checkbox" id="sync-m365" class="rounded text-blue-600 dark:bg-dark-300">
+                        <label for="sync-m365">Sync with M365 Calendar</label>
+                        <input type="checkbox" id="sync-google" class="rounded text-red-600 dark:bg-dark-300">
+                        <label for="sync-google">Sync with Google Calendar</label>
+                    </div>
+                    <button type="submit" 
+                            class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition custom-button">
+                        <i class="fas fa-calendar-plus mr-2"></i>Schedule Event
+                    </button>
+                </form>
+            </section>
+
+            <!-- Calendar Preview Section -->
+            <section class="bg-white dark:bg-dark-200 rounded-xl shadow-lg p-6 hover-scale custom-shadow">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">Upcoming Events</h2>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm text-gray-600 dark:text-gray-400">Calendar:</span>
+                        <select id="calendar-source" class="text-sm border rounded-lg px-2 py-1 dark:bg-dark-300 dark:border-dark-400 dark:text-gray-100">
+                            <option value="local">Local</option>
+                            <option value="m365">M365</option>
+                            <option value="google">Google</option>
+                            <option value="all">All</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="scheduled-events space-y-4">
+                    <!-- Events will be dynamically inserted here -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-dark-200 border-t dark:border-dark-300 mt-12">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <p class="text-gray-600 dark:text-gray-400">&copy; 2023 Schedule Master. All rights reserved.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"><i class="fab fa-github"></i></a>
+                    <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="m365-config.js"></script>
+    <script src="google-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
